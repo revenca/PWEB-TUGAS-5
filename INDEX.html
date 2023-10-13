@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuaca Hari Ini</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #3498db;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        h1,
+        label {
+            color: #000;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #weather {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #000;
+        }
+
+        #temperature {
+            font-size: 24px;
+            color: #000;
+        }
+
+        .corner-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            max-width: 50px; /* Mengubah ukuran maksimum gambar */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="download.png" alt="Deskripsi gambar" class="corner-image">
+        <h1>Cek Cuaca</h1>
+        <label for="city">Masukkan nama kota:</label>
+        <input type="text" id="city" placeholder="Contoh: Jakarta">
+        <br>
+        <button onclick="getWeather()">Cek Cuaca</button>
+        <div id="weather"></div>
+        <div id="temperature"></div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const apiKey = 'e40f0923bb3179b36f026de37b4dd6ce';
+            const city = document.getElementById('city').value;
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+            const xhr = new XMLHttpRequest();
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    const response = JSON.parse(xhr.responseText);
+                    const weatherData = response.weather[0].description;
+                    const temperature = (response.main.temp - 273.15).toFixed(2); // Konversi dari Kelvin ke Celsius
+                    document.getElementById('weather').innerHTML = `Cuaca saat ini di ${city}: ${weatherData}`;
+                    document.getElementById('temperature').innerHTML = `Suhu saat ini: ${temperature}°C`;
+                } else {
+                    console.error('Gagal mengambil data cuaca');
+                }
+            };
+
+            xhr.open('GET', apiUrl, true);
+            xhr.send();
+        }
+    </script>
+</body>
+
+</html>
